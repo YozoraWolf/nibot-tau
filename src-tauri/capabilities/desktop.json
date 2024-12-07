@@ -1,0 +1,44 @@
+{
+  "identifier": "desktop-capability",
+  "platforms": [
+    "macOS",
+    "windows",
+    "linux"
+  ],
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "updater:default",
+    "shell:allow-open",
+    "shell:allow-kill",
+    "shell:allow-stdin-write",
+    "fs:allow-open",
+    "fs:allow-write",
+    "fs:allow-read",
+    "fs:allow-rename",
+    "fs:allow-mkdir",
+    "fs:allow-remove",
+    "fs:allow-write-text-file",
+    "fs:scope-download-recursive",
+    "fs:scope-resource-recursive",
+    {
+      "identifier": "fs:scope-appdata-recursive",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        }
+      ],
+      "deny": ["$APPDATA/db/*.stronghold"]
+    },
+    {
+      "identifier": "fs:scope",
+      "allow": [{ "path": "$APPDATA/**" }, { "path": "$APPCONFIG/**" }, { "path": "$APPLOCALDATA/**" }]
+    },
+    "fs:default",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "$APPDATA/*" }]
+    }
+  ]
+}

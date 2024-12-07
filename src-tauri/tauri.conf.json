@@ -1,0 +1,52 @@
+{
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "productName": "nibot",
+  "mainBinaryName": "nibot",
+  "version": "0.0.0",
+  "identifier": "com.yozorawolf.nibot",
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZCMTBFRERGMzZCOUI2MApSV1JnbTJ2ejNRNnhELzdJanV3ZVlEZ0NGMkg3eHlJZFluWVE4WU5ZaVNKTExBVmFOejNCb2lWaAo=",
+      "endpoints": [
+        "https://raw.githubusercontent.com/yozorawolf/nibot/update/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "fullscreen": false,
+        "resizable": true,
+        "center": true,
+        "title": "Nibot",
+        "width": 1200,
+        "height": 800,
+        "useHttpsScheme": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  }
+}

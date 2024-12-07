@@ -1,0 +1,182 @@
+{
+  "identifier": "migrated",
+  "description": "permissions that were migrated from v1",
+  "local": true,
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "updater:default",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "fs:allow-read-dir",
+    "fs:allow-copy-file",
+    "fs:allow-mkdir",
+    "fs:allow-remove",
+    "fs:allow-remove",
+    "fs:allow-rename",
+    "fs:allow-exists",
+    "shell:allow-open",
+    "fs:default",
+    {
+      "identifier": "fs:allow-read-file",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-write-file",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-read-dir",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-copy-file",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-mkdir",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-remove",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-rename",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        {
+          "path": "$APPDATA"
+        },
+        {
+          "path": "$APPLOCALDATA"
+        },
+        {
+          "path": "$APPCONFIG"
+        },
+        {
+          "path": "$APPLOG"
+        }
+      ]
+    }
+  ]
+}
