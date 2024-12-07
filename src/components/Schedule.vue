@@ -1,112 +1,147 @@
 <template>
     <div class="schedule-container q-pa-md q-gutter-sm">
-      <!-- Time Column -->
-      <div class="time-column">
-        <div v-for="hour in hours" :key="hour" class="time-label">
-          {{ formatHour(hour) }}
+        <div v-for="hour in hours" :key="hour" class="hour-row">
+            <!-- Time Label -->
+            <div class="time-label">
+                {{ formatHour(hour) }}
+            </div>
+
+            <!-- Time Slot -->
+            <div class="time-slot">
+                <template v-if="expandedClusters[hour] || getScheduleForHour(hour).length <= 5">
+                    <q-item :clickable="getScheduleForHour(hour).length > 5" v-for="(event, index) in getScheduleForHour(hour)" :key="event.id" class="event"
+                      @click="expandCluster(hour)">
+                        <q-item-section>
+                            <strong>{{ event.title }}</strong>
+                            <span class="event-time">{{ event.startTime }}</span>
+                        </q-item-section>
+                    </q-item>
+                </template>
+                <template v-else>
+                    <q-item class="event cluster" clickable @click="expandCluster(hour)">
+                        <q-item-section>
+                            <strong>{{ getScheduleForHour(hour).length }} events</strong>
+                            <span class="event-time">Click to expand</span>
+                        </q-item-section>
+                    </q-item>
+                </template>
+            </div>
         </div>
-      </div>
-  
-      <!-- Schedule Grid -->
-      <div class="grid-column">
-        <div v-for="hour in hours" :key="hour" class="time-slot">
-          <q-item v-for="event in getEventsForHour(hour)" :key="event.id" class="event">
-            <q-item-section>
-              <strong>{{ event.title }}</strong>
-              <span class="event-time">{{ event.startTime }} - {{ event.endTime }}</span>
-            </q-item-section>
-          </q-item>
-        </div>
-      </div>
     </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, computed } from "vue";
-  
-  // Props: events passed from the parent component
-  defineProps({
-    events: {
-      type: Array,
-      default: () => [],
+</template>
+
+
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+const props = defineProps({
+    schedule: {
+        type: Array,
+        required: true,
     },
-  });
-  
-  // Generate hours for the day (0-23)
-  const hours = Array.from({ length: 24 }, (_, i) => i);
-  
-  // Format hour into 12-hour clock format
-  const formatHour = (hour: number) => {
+});
+
+const hours = Array.from({ length: 24 }, (_, i) => i);
+const expandedClusters = ref<Record<number, boolean>>({}); // Tracks expanded clusters
+
+const formatHour = (hour: number) => {
     const period = hour < 12 ? "AM" : "PM";
     const displayHour = hour % 12 || 12;
     return `${displayHour}:00 ${period}`;
-  };
-  
-  // Get events for a specific hour
-  const getEventsForHour = (hour: number) => {
-    return events.filter((event) => {
-      const eventStart = parseTime(event.startTime);
-      return Math.floor(eventStart) === hour;
+};
+
+const getScheduleForHour = (hour: number) => {
+    return props.schedule.filter((event) => {
+        const scheduleStart = parseTime(event.startTime);
+        return Math.floor(scheduleStart) === hour;
     });
-  };
-  
-  // Helper: Parse time into fractional hours
-  const parseTime = (time: string) => {
+};
+
+const parseTime = (time: string) => {
+    if (!time) return 0;
     const [hour, minute] = time.split(":").map(Number);
     return hour + minute / 60;
-  };
-  </script>
-  
-  <style lang="scss" scoped>
-  .schedule-container {
+};
+
+const expandCluster = (hour: number) => {
+    expandedClusters.value[hour] = !expandedClusters.value[hour];
+};
+
+onMounted(() => {
+    console.log("Schedule component mounted");
+});
+</script>
+
+<style lang="scss" scoped>
+.schedule-container {
     display: flex;
-    border: 1px solid #ddd;
-    height: 100%;
-    background-color: #fff;
-  }
-  
-  .time-column {
-    width: 80px;
-    background-color: #f4f4f4;
-    border-right: 1px solid #ddd;
-  
-    .time-label {
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: #666;
+    flex-direction: column;
+}
+
+.hour-row {
+    display: flex;
+    align-items: stretch;
+    /* Ensure rows match height */
+    min-height: 40px;
+    /* Base height for empty rows */
+    border-top: 1px solid $grid-lines-color-light;
+
+    .q-dark & {
+        border-top: 1px solid $grid-lines-color-dark;
     }
-  }
-  
-  .grid-column {
+}
+
+
+.time-column {
+    width: 80px;
+
+    .time-label {
+        width: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        padding: 10px;
+        background-color: #f9f9f9;
+
+        .q-dark & {
+            background-color: #2c2c2c;
+        }
+    }
+
+}
+
+.grid-column {
     flex: 1;
     position: relative;
-  
+
     .time-slot {
-      height: 50px;
-      border-bottom: 1px solid #ddd;
-      position: relative;
+        flex: 1;
+        position: relative;
+        padding-bottom: 10px;
+        /* Space between events */
     }
-  
+
     .event {
-      position: absolute;
-      left: 5px;
-      right: 5px;
-      background-color: #1976D2;
-      color: white;
-      border-radius: 4px;
-      padding: 4px;
-      font-size: 12px;
-      overflow: hidden;
-  
-      .event-time {
-        display: block;
-        font-size: 10px;
-        color: #bbdefb;
-      }
+        position: relative;
+        background-color: #1976D2;
+        border-radius: 4px;
+        padding: 4px;
+        margin-bottom: 4px;
+        /* Space between events */
+        font-size: 12px;
+        overflow: hidden;
+
+        .event-time {
+            display: block;
+            font-size: 10px;
+        }
     }
-  }
-  </style>
-  
+
+    .event.cluster {
+        background-color: #ff9800;
+        cursor: pointer;
+        text-align: center;
+    }
+}
+</style>

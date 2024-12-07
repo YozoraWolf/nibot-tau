@@ -11,6 +11,9 @@ export default defineConfig((ctx) => {
       targetName: undefined,
       arch: {},
       archName: undefined,
-      debug: undefined  
+      debug: undefined,
+      build: {
+        sassVariables: 'src/styles/quasar.variables.scss'
+      }      
   }
 })

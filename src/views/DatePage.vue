@@ -14,7 +14,9 @@
         </q-row>
         <q-row>
             <q-col>
-                <Schedule :schedule="schedule"/>
+                <div v-if="scheduleData.length > 0">
+                    <Schedule :schedule="scheduleData"/>
+                </div>
             </q-col>
         </q-row>
     </div>
@@ -24,8 +26,14 @@
 import dayjs from 'dayjs';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import Schedule from '@components/Schedule.vue';
+import { useScheduleStore } from '@store/schedule';
+
+const scheduleStore = useScheduleStore();
 
 const date = ref('1970-01-01');
+
+const scheduleData = ref([]);
 
 const route = useRoute();
 const router = useRouter();
@@ -45,5 +53,7 @@ const back = () => {
 onMounted(() => {
     console.log('Date page mounted');
     date.value = route.params.date as string;
+    scheduleData.value = scheduleStore.getSchedulesByDate(date.value);
+    console.log("store data", scheduleData.value);
 });
 </script>

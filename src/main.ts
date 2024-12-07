@@ -17,8 +17,11 @@ const app = createApp(App);
 
 app.use(Quasar, {
     config: {
-        dark: true /* look at QuasarConfOptions from the API card */
-      }
+        dark: true
+    },
+    build: {
+        sassVariables: 'src/quasar.variables.scss'
+      }      
 });
 
 
