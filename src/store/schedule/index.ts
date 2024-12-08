@@ -3,11 +3,11 @@ import { readTextFile, exists, writeTextFile } from '@tauri-apps/plugin-fs';
 import { appDataDir, BaseDirectory } from '@tauri-apps/api/path';
 import Logger from '@/utils/logger';
 
-const SERVER = {
-    testbooru: 0,
-    danbooru: 1,
-    gelbooru: 2,
-} as const;
+enum Server {
+    testbooru,
+    danbooru,
+    gelbooru,
+};
 
 interface Schedule {
     [date: string]: Array<ScheduleItem>;
@@ -16,16 +16,18 @@ interface Schedule {
 interface ScheduleItem {
     id: number;
     post_id: number;
-    server_id: typeof SERVER;
+    server_id: Server;
     title: string;
-    timestamp: string;
+    timestamp: number;
 }
 
+// TODO: Transition to SQLite when finished with JSON
 let schedulePath = "";
 
 
 interface ScheduleState {
     schedule: Schedule;
+    currentSelectedDate: string;
 }
 
 let logger: Logger;
@@ -33,6 +35,7 @@ let logger: Logger;
 export const useScheduleStore = defineStore('schedule', {
     state: (): ScheduleState => ({
         schedule: {},
+        currentSelectedDate: '',
     }),
     actions: {
         async init() : Promise<void> {
@@ -68,8 +71,25 @@ export const useScheduleStore = defineStore('schedule', {
             if (!this.schedule || Object.keys(this.schedule).length === 0) {
                 await this.init();
             }
+            console.log(this.schedule);
             return this.schedule;
         },
+
+        createNewScheduleItem(date: string) : ScheduleItem {
+            const id = Math.max(...this.schedule[date].map(item => item.id), 0) + 1;
+            console.log('Creating new schedule item with id: ' + id);
+            const newItem = {
+                id,
+                post_id: 0,
+                server_id: Server.testbooru,
+                title: '',
+                timestamp: 0,
+            };
+            this.schedule[date] = [...this.schedule[date], newItem];
+            logger.info('Created new schedule item:' + newItem);
+            return newItem;
+        },
+
 
         addScheduleItem(date: string, item: ScheduleItem) {
             this.schedule[date] = [...this.schedule[date], item];
@@ -91,19 +111,25 @@ export const useScheduleStore = defineStore('schedule', {
             }
         },
 
-        // File Specific
-
-        getScheduleById(date: string, id: number) {
-            return this.schedule[date].find(item => item.id === id);
+        setSelectedCurrentDate(date: string) {
+            this.currentSelectedDate = date;
+        }
+    },
+    getters: {
+        getScheduleById: (state) => (date: string, id: number) : ScheduleItem | undefined => {
+            return state.schedule[date].find(item => item.id === id);
         },
 
-        getSchedulesByDate(date: string) {
-            const dateSchedule = this.schedule[date];
+        getSchedulesByDate: (state) => (date: string) => {
+            const dateSchedule = state.schedule[date];
             if (!dateSchedule) {
                 return [];
             }
             return dateSchedule; 
         },
 
+        getCurrentSelectedDate: (state) => () : string =>{
+            return state.currentSelectedDate;
+        }
     },
 });

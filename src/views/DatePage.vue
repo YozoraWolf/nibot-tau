@@ -26,7 +26,7 @@
 import dayjs from 'dayjs';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Schedule from '@components/Schedule.vue';
+import Schedule from '@/components/Schedule/index.vue';
 import { useScheduleStore } from '@store/schedule';
 
 const scheduleStore = useScheduleStore();

@@ -9,23 +9,21 @@
             <!-- Time Slot -->
             <div class="time-slot">
                 <template v-if="expandedClusters[hour] || getScheduleForHour(hour).length <= 5">
-                    <q-item :clickable="getScheduleForHour(hour).length > 5" v-for="(event, index) in getScheduleForHour(hour)" :key="event.id" class="event"
-                      @click="expandCluster(hour)">
-                        <q-item-section>
-                            <strong>{{ event.title }}</strong>
-                            <span class="event-time">{{ event.startTime }}</span>
-                        </q-item-section>
-                    </q-item>
+                    <ScheduleItem clickable @click="openPostModal(event)" 
+                    v-for="(event, index) in getScheduleForHour(hour)" 
+                    :key="event.id" :event="event"></ScheduleItem>
                 </template>
                 <template v-else>
-                    <q-item class="event cluster" clickable @click="expandCluster(hour)">
-                        <q-item-section>
-                            <strong>{{ getScheduleForHour(hour).length }} events</strong>
-                            <span class="event-time">Click to expand</span>
-                        </q-item-section>
-                    </q-item>
+                    <q-expansion-item :label="`${getScheduleForHour(hour).length} posts`" class="full-width">
+                        <ScheduleItem clickable @click="openPostModal(event)" 
+                        v-for="(event, index) in getScheduleForHour(hour)" 
+                        :key="event.id" :event="event"></ScheduleItem>
+                    </q-expansion-item>
                 </template>
             </div>
+        </div>
+        <div v-if="selectedPost">
+            <PostModal ref="postModal" :post="selectedPost" :date="date" />
         </div>
     </div>
 </template>
@@ -33,6 +31,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import ScheduleItem from "./ScheduleItem.vue";
+import PostModal from "./Post/PostModal.vue";
 
 const props = defineProps({
     schedule: {
@@ -40,6 +40,9 @@ const props = defineProps({
         required: true,
     },
 });
+
+const selectedPost = ref(null);
+const postModal = ref(null);
 
 const hours = Array.from({ length: 24 }, (_, i) => i);
 const expandedClusters = ref<Record<number, boolean>>({}); // Tracks expanded clusters
@@ -63,8 +66,9 @@ const parseTime = (time: string) => {
     return hour + minute / 60;
 };
 
-const expandCluster = (hour: number) => {
-    expandedClusters.value[hour] = !expandedClusters.value[hour];
+const openPostModal = (event) => {
+    selectedPost.value = event;
+    postModal.value.showModal();
 };
 
 onMounted(() => {
@@ -120,22 +124,6 @@ onMounted(() => {
         position: relative;
         padding-bottom: 10px;
         /* Space between events */
-    }
-
-    .event {
-        position: relative;
-        background-color: #1976D2;
-        border-radius: 4px;
-        padding: 4px;
-        margin-bottom: 4px;
-        /* Space between events */
-        font-size: 12px;
-        overflow: hidden;
-
-        .event-time {
-            display: block;
-            font-size: 10px;
-        }
     }
 
     .event.cluster {

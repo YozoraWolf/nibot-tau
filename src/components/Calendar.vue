@@ -25,6 +25,10 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
 
+import { useScheduleStore } from '@/store/schedule';
+
+const scheduleStore = useScheduleStore();
+
 const currentMonth = ref(dayjs());
 const days = ref([]);
 const router = useRouter();
@@ -59,6 +63,7 @@ const isCurrentMonth = (day) => {
 const handleDayClick = (day) => {
   if (!isCurrentMonth(day)) return; // Disable clicks for non-current month days
   const selectedDate = day.format('YYYY-MM-DD');
+  scheduleStore.setSelectedCurrentDate(selectedDate);
   router.push(`/date/${selectedDate}`);
 };
 
