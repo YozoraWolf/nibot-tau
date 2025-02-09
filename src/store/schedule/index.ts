@@ -2,24 +2,9 @@ import { defineStore } from 'pinia';
 import { readTextFile, exists, writeTextFile } from '@tauri-apps/plugin-fs';
 import { appDataDir, BaseDirectory } from '@tauri-apps/api/path';
 import Logger from '@/utils/logger';
+import { Schedule, ScheduleItem, Server } from '@/interfaces/schedule';
 
-enum Server {
-    testbooru,
-    danbooru,
-    gelbooru,
-};
 
-interface Schedule {
-    [date: string]: Array<ScheduleItem>;
-  }
-
-interface ScheduleItem {
-    id: number;
-    post_id: number;
-    server_id: Server;
-    title: string;
-    timestamp: number;
-}
 
 // TODO: Transition to SQLite when finished with JSON
 let schedulePath = "";
@@ -76,7 +61,7 @@ export const useScheduleStore = defineStore('schedule', {
         },
 
         createNewScheduleItem(date: string) : ScheduleItem {
-            const id = Math.max(...this.schedule[date].map(item => item.id), 0) + 1;
+            const id = Math.max(...this.schedule[date].map((item: ScheduleItem) => item.id), 0) + 1;
             console.log('Creating new schedule item with id: ' + id);
             const newItem = {
                 id,
@@ -96,8 +81,17 @@ export const useScheduleStore = defineStore('schedule', {
             logger.info('Added schedule item:' + item);
         },
 
+        addScheduleItems(date: string, items: Array<ScheduleItem>) {
+            // If there is no schedule for the date, create a new array
+            if(this.schedule[date] === undefined) {
+                this.schedule[date] = [];
+            }
+            this.schedule[date] = [...this.schedule[date], ...items];
+            logger.info('Added schedule items:' + items);
+        },
+
         removeScheduleItem(date: string, id: number) {
-            this.schedule[date] = this.schedule[date].filter(item => item.id !== id);
+            this.schedule[date] = this.schedule[date].filter((item: ScheduleItem) => item.id !== id);
         },
         
         async saveSchedule() {
@@ -117,7 +111,7 @@ export const useScheduleStore = defineStore('schedule', {
     },
     getters: {
         getScheduleById: (state) => (date: string, id: number) : ScheduleItem | undefined => {
-            return state.schedule[date].find(item => item.id === id);
+            return state.schedule[date].find((item: ScheduleItem) => item.id === id);
         },
 
         getSchedulesByDate: (state) => (date: string) => {

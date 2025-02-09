@@ -22,15 +22,13 @@
                 </template>
             </div>
         </div>
-        <div v-if="selectedPost">
-            <PostModal ref="postModal" :post="selectedPost" :date="date" />
-        </div>
+        <PostModal ref="postModal" :post="selectedPost"/>
     </div>
 </template>
 
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, Ref } from "vue";
 import ScheduleItem from "./ScheduleItem.vue";
 import PostModal from "./Post/PostModal.vue";
 
@@ -42,7 +40,7 @@ const props = defineProps({
 });
 
 const selectedPost = ref(null);
-const postModal = ref(null);
+const postModal: Ref<any> = ref();
 
 const hours = Array.from({ length: 24 }, (_, i) => i);
 const expandedClusters = ref<Record<number, boolean>>({}); // Tracks expanded clusters
@@ -53,8 +51,8 @@ const formatHour = (hour: number) => {
     return `${displayHour}:00 ${period}`;
 };
 
-const getScheduleForHour = (hour: number) => {
-    return props.schedule.filter((event) => {
+const getScheduleForHour = (hour: number): any => {
+    return props.schedule.filter((event: any) => {
         const scheduleStart = parseTime(event.startTime);
         return Math.floor(scheduleStart) === hour;
     });
@@ -66,7 +64,7 @@ const parseTime = (time: string) => {
     return hour + minute / 60;
 };
 
-const openPostModal = (event) => {
+const openPostModal = (event: any) => {
     selectedPost.value = event;
     postModal.value.showModal();
 };

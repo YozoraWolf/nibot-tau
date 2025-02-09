@@ -1,8 +1,8 @@
 <template>
     <q-item :clickable="clickable" @click="handleClick" class="event">
         <q-item-section>
-            <strong>{{ event.title }}</strong>
-            <span class="event-time">{{ event.startTime }}</span>
+            <strong>{{ event?.title }}</strong>
+            <span class="event-time">{{ event?.startTime }}</span>
         </q-item-section>
     </q-item>
 </template>
@@ -15,6 +15,10 @@ const props = defineProps({
     clickable: Boolean,
     hour: Number
 });
+
+const handleClick = () => {
+    console.log('Event clicked:', props.event);
+};
 </script>
 
 <style lang="scss" scoped>

@@ -3,7 +3,7 @@ import { createPinia } from "pinia";
 import App from "./App.vue";
 import { router } from "./router";
 
-import { Quasar } from 'quasar'
+import { Dialog, Notify, Quasar } from 'quasar'
 
 // Import icon libraries
 import '@quasar/extras/material-icons/material-icons.css'
@@ -17,12 +17,19 @@ const app = createApp(App);
 
 app.use(Quasar, {
     config: {
-        dark: true
+        dark: true,
     },
     build: {
         sassVariables: 'src/quasar.variables.scss'
-      }      
+    },
 });
+
+app.use(Quasar, {
+    plugins: {
+      Dialog,
+      Notify
+    }
+  })
 
 
 app.use(pinia);

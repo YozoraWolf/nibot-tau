@@ -15,8 +15,15 @@ export default defineConfig(async () => ({
             new URL('./src/quasar-variables.scss', import.meta.url)
         )
     }),
+    
 ],
-
+css: {
+  preprocessorOptions: {
+    scss: {
+      api: 'modern-compiler' // or "modern"
+    }
+  }
+},
 
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
@@ -34,7 +41,8 @@ export default defineConfig(async () => ({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@views': fileURLToPath(new URL('./src/views', import.meta.url)),
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
-      '@store': fileURLToPath(new URL('./src/store', import.meta.url))
+      '@store': fileURLToPath(new URL('./src/store', import.meta.url)),
+      '@types': fileURLToPath(new URL('./src/types', import.meta.url))
     },
   },
 

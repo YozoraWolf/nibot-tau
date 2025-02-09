@@ -2,9 +2,8 @@
     <q-dialog v-model="show" persistent>
         <q-card>
             <q-card-section>
-                <q-input v-model="post.title" label="Title" />
-                <q-input v-model="post.startTime" label="Start Time" />
-                <q-input v-model="post.endTime" label="End Time" />
+                <q-input v-model="localPost.title" label="Title" />
+                <q-input v-model="localPost.startTime" label="Start Time" />
             </q-card-section>
             <q-card-actions align="right">
                 <q-btn label="Cancel" color="primary" @click="closeModal" />
@@ -15,10 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { useScheduleStore } from '@store/schedule';
+import { onMounted, Ref, ref, watch } from 'vue';
+import { useScheduleStore } from '@/store/schedule';
 import { useRouter } from 'vue-router';
 import Logger from '@/utils/logger';
+import { cloneDeep } from 'lodash';
 
 const logger = new Logger('PostModal');
 
@@ -26,6 +26,10 @@ const router = useRouter();
 const scheduleStore = useScheduleStore();
 
 const show = ref(false);
+
+
+const localPost: Ref<any>= ref();
+const date = ref('');
 
 const props = defineProps({
     post: Object,
@@ -41,19 +45,21 @@ const showModal = () => {
 };
 
 const save = () => {
-    scheduleStore.addSchedule(post);
+    scheduleStore.addScheduleItem(date.value, localPost.value.post);
     show.value = false;
     router.push('/');
 };
 
 onMounted(async () => {
+    localPost.value = cloneDeep(props.post);
     await logger.init();
     console.log('Post modal mounted');
-    if(!props.post) {
-        props.post = scheduleStore.createNewScheduleItem(scheduleStore.getCurrentSelectedDate());
-        logger.info('Creating new post');
-    }
-    console.log('Post modal mounted, id:', props.post.id);
+    console.log('Post modal mounted:', localPost.value);
+    date.value = scheduleStore.getCurrentSelectedDate();
+});
+
+watch(() => props.post, (newVal) => {
+    localPost.value = cloneDeep(newVal);
 });
 
 defineExpose({

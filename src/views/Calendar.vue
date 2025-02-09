@@ -30,16 +30,16 @@ import { useScheduleStore } from '@/store/schedule';
 const scheduleStore = useScheduleStore();
 
 const currentMonth = ref(dayjs());
-const days = ref([]);
+const days = ref();
 const router = useRouter();
 
 const generateDays = () => {
-  const year = currentMonth.value.year();
-  const month = currentMonth.value.month() + 1;
+  const year: number = currentMonth.value.year();
+  const month: number = currentMonth.value.month() + 1;
   days.value = generateCalendarGrid(year, month);
 };
 
-const generateCalendarGrid = (year, month) => {
+const generateCalendarGrid = (year: number, month: number) => {
   const firstDayOfMonth = dayjs(`${year}-${month}-01`);
   const startOfWeek = firstDayOfMonth.startOf('week');
   const totalDays = 42; // Standard 6x7 grid
@@ -56,15 +56,15 @@ const nextMonth = () => {
   generateDays();
 };
 
-const isCurrentMonth = (day) => {
+const isCurrentMonth = (day: any) => {
   return day.isSame(currentMonth.value, 'month');
 };
 
-const handleDayClick = (day) => {
+const handleDayClick = (day: any) => {
   if (!isCurrentMonth(day)) return; // Disable clicks for non-current month days
   const selectedDate = day.format('YYYY-MM-DD');
   scheduleStore.setSelectedCurrentDate(selectedDate);
-  router.push(`/date/${selectedDate}`);
+  router.push(`/calendar/${selectedDate}`);
 };
 
 onMounted(() => {

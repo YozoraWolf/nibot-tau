@@ -1,0 +1,80 @@
+[
+    {
+        "name": "Danbooru",
+        "url": "https://danbooru.donmai.us",
+        "api_access": "/posts.json",
+        "tag_param": "tags",
+        "limit_param": "limit",
+        "page_param": "page",
+
+        "post_mappings": {
+            "id": "id",
+            "score": "score",
+            "rating": "rating",
+            "tags": {
+                "general": "tag_string_general",
+                "artist": "tag_string_artist",
+                "character": "tag_string_character",
+                "meta": "tag_string_meta"
+            },
+            "file_url": "file_url",
+            "preview_url": "preview_file_url",
+            "sample_url": "large_file_url",
+            "width": "image_width",
+            "height": "image_height",
+            "source": "source"
+        }
+    },
+    {
+        "name": "Gelbooru",
+        "url": "https://gelbooru.com",
+        "api_access": "/index.php?page=dapi&s=post&q=index",
+        "tag_param": "tags",
+        "limit_param": "limit",
+        "page_param": "pid",
+
+        "post_mappings": {
+            "id": "id",
+            "score": "score",
+            "rating": "rating",
+            "tags": {
+                "general": "tags",
+                "artist": "tags",
+                "character": "tags",
+                "meta": "tags"
+            },
+            "file_url": "file_url",
+            "preview_url": "preview_url",
+            "sample_url": "sample_url",
+            "width": "width",
+            "height": "height",
+            "source": "source"
+        }
+    },
+    {
+        "name": "TestBooru",
+        "url": "https://testbooru.donmai.us",
+        "api_access": "/posts.json",
+        "tag_param": "tags",
+        "limit_param": "limit",
+        "page_param": "page",
+
+        "post_mappings": {
+            "id": "id",
+            "score": "score",
+            "rating": "rating",
+            "tags": {
+                "general": "tag_string_general",
+                "artist": "tag_string_artist",
+                "character": "tag_string_character",
+                "meta": "tag_string_meta"
+            },
+            "file_url": "file_url",
+            "preview_url": "preview_file_url",
+            "sample_url": "large_file_url",
+            "width": "image_width",
+            "height": "image_height",
+            "source": "source"
+        }
+    }
+]

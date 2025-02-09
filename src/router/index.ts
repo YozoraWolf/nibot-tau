@@ -7,9 +7,29 @@ const routes = [
     component: () => import("../views/Home.vue"),
   },
   {
-    path: "/date/:date",
+    path: "/calendar",
+    name: "Calendar",
+    component: () => import("../views/Calendar.vue"),
+  },
+  {
+    path: "/calendar/:date",
     name: "DatePage",
     component: () => import("../views/DatePage.vue"),
+  },
+  {
+    path: "/today",
+    name: "Today",
+    component: () => import("../views/Today.vue"),
+  },
+  {
+    path: "/connections",
+    name: "Connections",
+    component: () => import("../views/Connections.vue"),
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    component: () => import("../views/Settings.vue"),
   }
 
 ];
