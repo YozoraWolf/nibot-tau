@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
+
   plugins: [vue({
     template: { transformAssetUrls }
   }),
@@ -33,7 +34,7 @@ css: {
   // 2. tauri expects a fixed port, fail if that port is not available
   server: {
     port: 1420,
-    strictPort: true,
+    strictPort: true
   },
 
   resolve: {

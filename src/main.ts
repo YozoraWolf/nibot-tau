@@ -22,14 +22,11 @@ app.use(Quasar, {
     build: {
         sassVariables: 'src/quasar.variables.scss'
     },
-});
-
-app.use(Quasar, {
     plugins: {
       Dialog,
       Notify
     }
-  })
+});
 
 
 app.use(pinia);

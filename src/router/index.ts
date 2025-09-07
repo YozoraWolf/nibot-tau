@@ -27,6 +27,11 @@ const routes = [
     component: () => import("../views/Connections.vue"),
   },
   {
+    path: "/manual-post",
+    name: "ManualPost",
+    component: () => import("../views/ManualPost.vue"),
+  },
+  {
     path: "/settings",
     name: "Settings",
     component: () => import("../views/Settings.vue"),

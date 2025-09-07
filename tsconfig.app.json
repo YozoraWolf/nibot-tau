@@ -34,6 +34,6 @@
         "@components/*": ["src/components/*"]
       }
     },
-    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue, src/**/*.scss"],
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.scss"],
   }
   

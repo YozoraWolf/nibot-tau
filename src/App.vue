@@ -44,6 +44,7 @@ const menuList = [
   { label: "Calendar", icon: "event", separator: false, route: "/calendar" },
   { label: "Today", icon: "upcoming", separator: false, route: "/today" },
   { label: "Connections", icon: "group", separator: false, route: "/connections" },
+  { label: "Manual Post", icon: "post_add", separator: false, route: "/manual-post" },
   { label: "Settings", icon: "settings", separator: false, route: "/settings" }
 ];
 

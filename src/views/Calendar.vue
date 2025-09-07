@@ -1,21 +1,28 @@
 <template>
-  <div class="calendar">
-    <div class="calendar-header row flex-center">
-      <q-btn @click="prevMonth" class="q-mx-md c-btn" rounded flat>
+  <div class="calendar-root">
+    <div class="calendar-header row items-center justify-between">
+      <q-btn @click="prevMonth" class="c-btn" rounded flat>
         <q-icon name="arrow_back" />
       </q-btn>
-      <transition name="fade" mode="out-in">
-        <h3 key="currentMonth" style="width: 400px" class="flex-center text-center">{{ currentMonth.format('MMMM YYYY')
-          }}</h3>
-      </transition> <q-btn @click="nextMonth" class="q-mx-md c-btn" rounded flat>
+      <h3 class="month-title">{{ currentMonth.format('MMMM YYYY') }}</h3>
+      <q-btn @click="nextMonth" class="c-btn" rounded flat>
         <q-icon name="arrow_forward" />
       </q-btn>
     </div>
+    <div class="calendar-weekdays row">
+      <div v-for="weekday in weekdays" :key="weekday" class="calendar-weekday col">
+        {{ weekday }}
+      </div>
+    </div>
     <div class="calendar-grid">
-      <q-btn v-for="day in days" :key="day.format('YYYY-MM-DD')"
-        :class="`calendar-day ${!isCurrentMonth(day) ? 'disabled' : ''}`" flat rounded @click="handleDayClick(day)">
-        {{ day.date() }}
-    </q-btn>
+      <CalendarDay
+        v-for="day in days"
+        :key="day.format('YYYY-MM-DD')"
+        :day="day"
+        :isCurrentMonth="isCurrentMonth(day)"
+        :items="getItemsForDay(day)"
+        @click="handleDayClick(day)"
+      />
     </div>
   </div>
 </template>
@@ -24,14 +31,15 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import dayjs from 'dayjs';
-
+import CalendarDay from '@/components/Calendar/CalendarDay.vue';
 import { useScheduleStore } from '@/store/schedule';
 
 const scheduleStore = useScheduleStore();
-
 const currentMonth = ref(dayjs());
-const days = ref();
+const days = ref<any[]>([]);
 const router = useRouter();
+
+const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const generateDays = () => {
   const year: number = currentMonth.value.year();
@@ -42,7 +50,7 @@ const generateDays = () => {
 const generateCalendarGrid = (year: number, month: number) => {
   const firstDayOfMonth = dayjs(`${year}-${month}-01`);
   const startOfWeek = firstDayOfMonth.startOf('week');
-  const totalDays = 42; // Standard 6x7 grid
+  const totalDays = 42; // 6 weeks x 7 days
   return Array.from({ length: totalDays }, (_, i) => startOfWeek.add(i, 'day'));
 };
 
@@ -61,10 +69,16 @@ const isCurrentMonth = (day: any) => {
 };
 
 const handleDayClick = (day: any) => {
-  if (!isCurrentMonth(day)) return; // Disable clicks for non-current month days
+  if (!isCurrentMonth(day)) return;
   const selectedDate = day.format('YYYY-MM-DD');
   scheduleStore.setSelectedCurrentDate(selectedDate);
   router.push(`/calendar/${selectedDate}`);
+};
+
+// Placeholder: Replace with actual logic to get items for a day
+const getItemsForDay = (day: any) => {
+  // Example: return scheduleStore.getItemsForDate(day.format('YYYY-MM-DD'));
+  return [];
 };
 
 onMounted(() => {
@@ -73,47 +87,45 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-.calendar {
+.calendar-root {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .calendar-header {
-  margin-bottom: 10px;
+  width: 100%;
+  padding: 16px 0;
+}
+
+.month-title {
+  flex: 1;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.calendar-weekdays {
+  width: 100%;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.calendar-weekday {
+  flex: 1 1 0;
+  padding: 8px 0;
 }
 
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-}
-
-.calendar-day {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.calendar-day.disabled {
-  cursor: not-allowed;
-}
-
-.calendar-day:hover:not(.disabled) {
-  background-color: var(--q-color-surface-hover);
-}
-
-
-.c-btn {
-  width: auto;
-  font-size: large;
-  height: 50px;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-  opacity: 0;
+  grid-auto-rows: 120px;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 0;
+  gap: 2px;
+  background: var(--q-color-surface);
 }
 </style>
